@@ -183,7 +183,10 @@ int main(int argc, char *argv[])
     }
 
     // Wait for all brokers to complete
-    for (int i = 0; i < broker_count; i++)
-        pthread_join(thread[i], NULL);
+    for (int i = 0; i < broker_count; i++){
+        pthread_join(thread[i], NULL);}
+
+    eventbuf_free(buffer);
+    
 }
 
