@@ -10,7 +10,7 @@
 // --dining philosophers, everyone has left for
 
 
-
+    //---------------------------//
     //1
     if x == 12:
         x++;
@@ -23,10 +23,11 @@
     if x == 12;
         x++;
     unlock(m1)
+    ////--------------------////
 
 
+    //---------------------------//
     //2
-
     if x == 12:
         lock(m1)
         x++;
@@ -40,21 +41,30 @@
     if x ==12;
         x++;
     unlock(m1)
+    ////---------------------------////
 
 
+    //---------------------------//
     //3
     if y not in hash:
         hash[y] = 12
+    else
+        hash[y]++
 
     //3 solution:
     //The race occurs anytime a thread examines the hash to find y, and also theoretically making y 12
-    //if other code was to increment or change value of y
+    //if two threads act at the same time, instead of doing y=12, then increment, it could set y=12 twice
     //to fix, add a lock around the whole thing
     lock(m1)
     if y not in hash:
         hash[y] = 12
+    else
+        hash[y]++
     unlock(m1)
+    ////---------------------------////
 
+
+    //---------------------------//   
     //4
     x += 12;
     //4 solution:
@@ -64,7 +74,10 @@
     lock(m1)
     x += 12;
     unlock(m1)
+    ////---------------------------////
 
+    
+    //---------------------------//
     //5
     x = 0
 
@@ -75,19 +88,32 @@
         x++;
 
     semaphore_wait():
-        while x == 0:
+        while x == 0: //->1
             do nothing  # spinlock
 
         x--
 
     //5 solution:
+    //The race condition occurs when two threads escape the while loop at once, when only one should.
+    //ex: set X to 1, threads to 2. Two threads use the wait loop, escape out of the spinlock at the same time, 
+    //and decrement down to -1.
+    //The spinlock no longer applies as its below 0, and can cause further issues.
+    //To fix, add a mutex around wait
 
+    semaphore_wait():
+    lock(m1)
+        while x == 0: //->1
+            do nothing  # spinlock
+
+        x--
+    unlock(m1)
+
+    ////---------------------------////
 
 
     //PART 2//
 
-
-    
+    //---------------------------//
     //1
     function1():
         lock(m1) //->1
@@ -130,9 +156,10 @@
 
         unlock(m1)
         unlock(m2)
+    ////---------------------------////
 
 
-
+    //---------------------------//
     //2
     function1():
         lock(m1)//->1
@@ -174,8 +201,10 @@
 
         unlock(m2)
         unlock(m1)
+    ////---------------------------////
 
 
+    //---------------------------//
     //3
     function1(m1, m2):  # Mutexes are passed in by caller//check out ordering by memory address, weeks current reading, related to this
         lock(m1)
@@ -185,5 +214,17 @@
         unlock(m1)
 
     //problem 3 solutions:
-    //????
+    //A problem occurs with this function if two different threads are passed in a different order of mutex's.
+    //If thread A gets (function1(L1, L2)) and thread B gets function1(L2,L1), they could theoretically deadlock at m2
+    //To fix, you must sort the locks to ensure its always in the same order
 
+    function1(m1,m2)
+        if m1 > m2{
+            lock(m1)
+            lock(m2)
+        }
+        else{
+            lock(m2)
+            lock(m1)
+        }
+    ////---------------------------////
