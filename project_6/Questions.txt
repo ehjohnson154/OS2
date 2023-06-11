@@ -1,0 +1,9 @@
+simfs_test.c: How to write tests? How to test for assert statements when 
+we're not sure what the answer is and how to get it without relying on other dependencies/functions or itself?
+
+free.c: Are set free and find free correct?
+
+inode.c: check statements. Confirm in block.c.
+inode.c: what do we have to write differently for inodes and blocks?
+
+mkfs.c: Very uncertain how to write the loop here.
