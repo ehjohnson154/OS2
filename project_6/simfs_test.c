@@ -58,7 +58,7 @@ void test_block(void){
     unsigned char empty_block[BLOCK_SIZE] = {0};
     //printf("before alloc\n");
     int block_num = alloc();
-    printf("%d block num\n", block_num);
+    //printf("%d block num\n", block_num);
 
     memset(full_block, 255, BLOCK_SIZE);
     //byte with 8 bits
